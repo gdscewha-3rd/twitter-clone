@@ -1,4 +1,4 @@
-import { dbService } from "myBase";
+import { dbService, storageService } from "myBase";
 import React from "react";
 import { useState } from "react/cjs/react.development";
 
@@ -10,6 +10,7 @@ const onDeleteClick=async ()=>{
     console.log(ok);
     if(ok){
        await dbService.doc(`tweets/${tweetObj.id}`).delete();
+       await storageService.refFromURL(tweetObj.attachmentUrl).delete();
     }
 };
 const toggleEditing=()=>setEditing(prev=>!prev);
@@ -47,6 +48,7 @@ return(
                ) :(
            <>
            <h4>{tweetObj.text}</h4>
+           {tweetObj.attachmentUrl && (<img src={tweetObj.attachmentUrl} width="100px" height="100px" />)}
            { isOwner && (
            <>
            <button onClick={onDeleteClick}>Delete Tweet</button>
